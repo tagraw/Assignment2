@@ -1,0 +1,4 @@
+enum PoleState {
+    NORMAL,
+    FAILED,
+}
