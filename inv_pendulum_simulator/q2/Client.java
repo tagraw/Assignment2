@@ -1,14 +1,9 @@
-/*
-<Applet Code="Client.class" fps=10 width=600 height=800> </Applet>
- */
-import java.applet.*;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
 
-public class Client extends Applet {
+public class Client extends JPanel {
 	static final long serialVersionUID = 1L;//give it a version so compiler won't complain
     TriggerType triggerType = TriggerType.TIMER_TRIGGER;
     // TriggerType triggerType = TriggerType.EVENT_TRIGGER;
@@ -45,9 +40,7 @@ public class Client extends Applet {
      */
     public void init() {
 
-        this.setSize(new Dimension(APPLET_WIDTH, APPLET_HEIGHT));
-
-        String str;
+        this.setPreferredSize(new Dimension(APPLET_WIDTH, APPLET_HEIGHT));
 
         // Build configuration info string
         configInfo = new String[2];
@@ -119,16 +112,29 @@ public class Client extends Applet {
         sensorThread = null;
         actuatorThread = null;
 
-        updatingUIThread.stop();
+        if (updatingUIThread != null) {
+            updatingUIThread.interrupt();
+        }
+        if (animator != null) {
+            animator.stop();
+        }
 
         try {
-            out.writeObject("bye"); // signal to close the sever
-            out.flush();
+            if (out != null) {
+                out.writeObject("bye"); // signal to close the sever
+                out.flush();
+            }
 
-            in.readObject();
-            in.close();
-            out.close();
-            requestSocket.close();
+            if (in != null) {
+                in.readObject();
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            if (requestSocket != null) {
+                requestSocket.close();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -139,7 +145,11 @@ public class Client extends Applet {
     /**
      * This method paints the graphics by calling the update method.
      */
-    public void paint(Graphics gr) {
-        animator.update(gr);
+    @Override
+    protected void paintComponent(Graphics gr) {
+        super.paintComponent(gr);
+        if (animator != null) {
+            animator.update(gr);
+        }
     }
 }

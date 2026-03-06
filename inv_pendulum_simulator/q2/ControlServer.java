@@ -147,59 +147,21 @@ class PoleServer_handler implements Runnable {
 
     }
 
-    // Calculate the actions to be applied to the inverted pendulum from the
-    // sensing data.
-    // TODO: Current implementation assumes that each pole is controlled
-    // independently. The interface needs to be changed if the control of one
-    // pendulum needs sensing data from other pendulums.
     double calculate_action(double angle, double angleDot, double pos, double posDot) {
-      double action = 0;
-       // if (angle > 0 && angleDiff < 0) {
-       if (angle > 0) {
-           if (angle > 65 * 0.01745) {
-               action = 10;
-           } else if (angle > 60 * 0.01745) {
-               action = 8;
-           } else if (angle > 50 * 0.01745) {
-               action = 7.5;
-           } else if (angle > 30 * 0.01745) {
-               action = 4;
-           } else if (angle > 20 * 0.01745) {
-               action = 2;
-           } else if (angle > 10 * 0.01745) {
-               action = 0.5;
-           } else if(angle >5*0.01745){
-               action = 0.2;
-           } else if(angle >2*0.01745){
-               action = 0.1;
-           } else {
-               action = 0;
-           }
-       } else if (angle < 0) {
-           if (angle < -65 * 0.01745) {
-               action = -10;
-           } else if (angle < -60 * 0.01745) {
-               action = -8;
-           } else if (angle < -50 * 0.01745) {
-               action = -7.5;
-           } else if (angle < -30 * 0.01745) {
-               action = -4;
-           } else if (angle < -20 * 0.01745) {
-               action = -2;
-           } else if (angle < -10 * 0.01745) {
-               action = -0.5;
-           } else if(angle <-5*0.01745){
-               action = -0.2;
-           } else if(angle <-2*0.01745){
-               action = -0.1;
-           } else {
-               action = 0;
-           }
-       } else {
-           action = 0.;
-       }
-       return action;
-   }
+        double target = 2.0;
+
+        double Kx = 0.1;
+        double Kv = 0.3;
+        double Kp = 30.0;
+        double Kd = 3.0;
+
+        double desiredAngle = Kx * (target - pos) - Kv * posDot;
+        desiredAngle = Math.max(-0.2, Math.min(0.2, desiredAngle));
+
+        double action = Kp * (angle - desiredAngle) + Kd * angleDot;
+
+        return action;
+    }
 
     /**
      * This method sends the Double message on the object output stream.
