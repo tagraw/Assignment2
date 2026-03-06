@@ -1,9 +1,3 @@
-import java.applet.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.io.*;
-
 public class Pendulum {
     public int pole_id;       // ID of the pole
     public double init_pos;   // initial position

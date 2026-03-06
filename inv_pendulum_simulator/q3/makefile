@@ -2,7 +2,7 @@ all:
 	javac *.java -Xlint
 
 client:
-	appletviewer Client.java -J-Djava.security.policy=Client.policy
+	java Main
 
 server:
 	java ControlServer

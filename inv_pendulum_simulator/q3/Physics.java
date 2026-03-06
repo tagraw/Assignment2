@@ -1,9 +1,3 @@
-import java.applet.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.io.*;
-
 public class Physics implements Runnable {
     public final double trackLimit = 4.8; // Track is available from -5.0 to 5.0
     long startTime;         // simulation start time (physical time)
@@ -17,9 +11,9 @@ public class Physics implements Runnable {
     Pendulum pendulums[];
     
     // Set the number of poles
-    public final int NUM_POLES = 1;
+    public final int NUM_POLES = 2;
     // Set the initial position of the poles
-    public final double[] pole_init_pos = {-1.0};
+    public final double[] pole_init_pos = {-2.0, 2.0};
 
     public Physics(double tau_sim, double tau_phy) {
         this.tau_sim = tau_sim;

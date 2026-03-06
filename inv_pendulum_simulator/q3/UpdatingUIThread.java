@@ -1,11 +1,8 @@
-import java.applet.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.io.*;
+import javax.swing.*;
 
 public class UpdatingUIThread implements Runnable{
-    Applet applet;
+    JComponent view;
     Physics physics;
     int updatingPeriod;
 
@@ -24,9 +21,9 @@ public class UpdatingUIThread implements Runnable{
     double phy_width = 10.0;
     double phy_height = 5.0;
 
-    public UpdatingUIThread(Applet applet, Physics physics,
+    public UpdatingUIThread(JComponent view, Physics physics,
                             int updatingPeriod, String[] simConfigInfo){
-        this.applet = applet;
+        this.view = view;
         this.physics = physics;
         this.updatingPeriod = updatingPeriod;
         this.simConfigInfo = simConfigInfo;
@@ -37,7 +34,7 @@ public class UpdatingUIThread implements Runnable{
 
         while(true){
             //Display it.
-            applet.repaint();
+            view.repaint();
 
             //Delay depending on how far we are behind.
             try {
@@ -56,9 +53,9 @@ public class UpdatingUIThread implements Runnable{
      * This method draws the track, pole, cart, action arrow and also erases previous image.
      */
     public void update(Graphics gr) {
-        Color bg = applet.getBackground();
-        Color fg = applet.getForeground();
-        Dimension d = applet.getSize();
+        Color bg = view.getBackground();
+        Color fg = view.getForeground();
+        Dimension d = view.getSize();
         Color cartColor = new Color(255, 69, 0);
         Color arrowColor = new Color(255, 255, 0);
         Color trackColor = new Color(100, 100, 50);
@@ -68,12 +65,12 @@ public class UpdatingUIThread implements Runnable{
                 || (d.width != offDimension.width)
                 || (d.height != offDimension.height)) {
             offDimension = d;
-            offImage = applet.createImage(d.width, d.height);
+            offImage = view.createImage(d.width, d.height);
             offGraphics = offImage.getGraphics();
         }
 
         //Erase the previous image.
-        offGraphics.setColor(applet.getBackground());
+        offGraphics.setColor(view.getBackground());
         offGraphics.fillRect(0, 0, d.width, d.height);
 
         //Draw Track.
@@ -159,7 +156,7 @@ public class UpdatingUIThread implements Runnable{
             }
         }
         //Last thing: Paint the image onto the screen.
-        gr.drawImage(offImage, 0, 0, applet);
+        gr.drawImage(offImage, 0, 0, view);
     }
 
     public int pixX(Dimension d, double v) {
